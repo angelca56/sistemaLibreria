@@ -3,7 +3,7 @@ from routes import register_routes
 from dotenv import load_dotenv
 import os
 
-def create_app():
+def crear_app():
     # Cargar variables de entorno
     load_dotenv()
 
@@ -16,7 +16,7 @@ def create_app():
 
     return app
 
-app = create_app()
+app = crear_app()
 
 # Iniciar servidor
 if __name__ == '__main__':
