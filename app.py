@@ -3,7 +3,6 @@ from routes import register_routes
 from dotenv import load_dotenv
 import os
 
-
 def create_app():
     # Cargar variables de entorno
     load_dotenv()
