@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Editar Producto - Librería Flor del Barrio</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/inventario.css') }}">
+</head>
+<body>
+    <div class="container py-4">
+        <!-- Encabezado -->
+        <header class="header-principal">
+            <h1 class="display-4">
+                <i class="fas fa-box-open me-2"></i>Editar Producto
+            </h1>
+        </header>
+
+        <!-- Barra superior -->
+        <div class="barra-superior">
+            <a href="{{ url_for('inventario.inventario') }}" class="btn rojo">
+                <i class="fas fa-arrow-left me-2"></i>Volver al Inventario
+            </a>
+        </div>
+
+        <!-- Formulario de edición -->
+        <section class="card shadow">
+            <div class="card-body">
+                <form method="POST" action="{{ url_for('inventario.actualizar_producto', producto_id=producto[0]) }}" id="form-editar" onsubmit="return validarFormularioEdicion()">
+                    <!-- Grupo de formulario para código -->
+                    <div class="grupo-formulario">
+                        <label for="codigo">
+                            <i class="fas fa-barcode me-2"></i>Código
+                        </label>
+                        <input type="text" id="codigo" name="codigo" value="{{ producto[1] }}" readonly
+                               class="form-control" title="Código del producto" />
+                    </div>
+
+                    <!-- Grupo de formulario para nombre -->
+                    <div class="grupo-formulario">
+                        <label for="nombre">
+                            <i class="fas fa-tag me-2"></i>Nombre
+                        </label>
+                        <input type="text" id="nombre" name="nombre" value="{{ producto[2] }}" required
+                               class="form-control" placeholder="Ej. Cuaderno grande" />
+                        <div class="error-mensaje"></div>
+                    </div>
+
+                    <!-- Grupo de formulario para categoría -->
+                    <div class="grupo-formulario">
+                        <label for="categoria">
+                            <i class="fas fa-tags me-2"></i>Categoría
+                        </label>
+                        <select name="categoria" id="categoria" required class="form-control">
+                            <option value="">Seleccione categoría</option>
+                            <option value="Libros" {% if producto[3] == 'Libros' %}selected{% endif %}>Libros</option>
+                            <option value="Papelería" {% if producto[3] == 'Papelería' %}selected{% endif %}>Papelería</option>
+                            <option value="Material Escolar" {% if producto[3] == 'Material Escolar' %}selected{% endif %}>Material Escolar</option>
+                            <option value="Arte" {% if producto[3] == 'Arte' %}selected{% endif %}>Arte</option>
+                            <option value="Otros" {% if producto[3] == 'Otros' %}selected{% endif %}>Otros</option>
+                        </select>
+                        <div class="error-mensaje"></div>
+                    </div>
+
+                    <!-- Grupo de formulario para cantidad -->
+                    <div class="grupo-formulario">
+                        <label for="cantidad">
+                            <i class="fas fa-boxes me-2"></i>Cantidad
+                        </label>
+                        <input type="number" id="cantidad" name="cantidad" value="{{ producto[4] }}" required
+                               class="form-control" placeholder="Ej. 50" min="0" />
+                        <div class="error-mensaje"></div>
+                    </div>
+
+                    <!-- Grupo de formulario para precio -->
+                    <div class="grupo-formulario">
+                        <label for="precio">
+                            <i class="fas fa-dollar-sign me-2"></i>Precio
+                        </label>
+                        <input type="number" id="precio" step="0.01" name="precio" value="{{ producto[5] }}" required
+                               class="form-control" placeholder="Ej. 12.50" min="0" />
+                        <div class="error-mensaje"></div>
+                    </div>
+
+                    <!-- Botones del formulario -->
+                    <div class="botones-formulario">
+                        <button type="submit" class="btn verde" id="btn-guardar">
+                            <i class="fas fa-save me-2"></i>Guardar Cambios
+                        </button>
+                        <a href="{{ url_for('inventario.inventario') }}" class="btn rojo">
+                            <i class="fas fa-times me-2"></i>Cancelar
+                        </a>
+                    </div>
+                </form>
+            </div>
+        </section>
+    </div>
+
+    <!-- Modal de confirmación -->
+    <div class="modal" id="modal-confirmacion">
+        <div class="modal-contenido">
+            <p id="mensaje-confirmacion"></p>
+            <div class="modal-botones">
+                <button class="btn gris" id="btn-cancelar-modal">Cancelar</button>
+                <button class="btn rojo" id="btn-confirmar">Confirmar</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="{{ url_for('static', filename='js/inventario.js') }}"></script>
+    
+    <!-- Script específico para editar producto -->
+    <script>
+    document.addEventListener("DOMContentLoaded", function() {
+        // Función para mostrar mensajes de error
+        function mostrarError(input, mensaje) {
+            const grupoFormulario = input.closest('.grupo-formulario');
+            let errorElement = grupoFormulario.querySelector('.error-mensaje');
+            
+            errorElement.textContent = mensaje;
+            errorElement.style.display = 'block';
+            input.style.borderColor = 'var(--danger-color)';
+        }
+
+        // Función para limpiar errores
+        function limpiarError(input) {
+            const grupoFormulario = input.closest('.grupo-formulario');
+            const errorElement = grupoFormulario.querySelector('.error-mensaje');
+            
+            errorElement.textContent = '';
+            errorElement.style.display = 'none';
+            input.style.borderColor = 'var(--border-color)';
+        }
+
+        // Validaciones específicas
+        function validarNombre(input) {
+            const valor = input.value.trim();
+            const regex = /^[a-zA-Z0-9áéíóúÁÉÍÓÚñÑ\s\.,-]{3,50}$/;
+            
+            if (!valor) {
+                mostrarError(input, 'El nombre es obligatorio');
+                return false;
+            }
+            
+            if (!regex.test(valor)) {
+                mostrarError(input, 'El nombre debe tener entre 3-50 caracteres (letras, números, espacios, .,-)');
+                return false;
+            }
+            
+            limpiarError(input);
+            return true;
+        }
+
+        function validarCategoria(select) {
+            const valor = select.value;
+            
+            if (!valor) {
+                mostrarError(select, 'Debe seleccionar una categoría');
+                return false;
+            }
+            
+            limpiarError(select);
+            return true;
+        }
+
+        function validarCantidad(input) {
+            const valor = input.value.trim();
+            const regex = /^\d+$/;
+            
+            if (!valor) {
+                mostrarError(input, 'La cantidad es obligatoria');
+                return false;
+            }
+            
+            if (!regex.test(valor)) {
+                mostrarError(input, 'La cantidad debe ser un número entero');
+                return false;
+            }
+            
+            const cantidad = parseInt(valor);
+            if (cantidad < 0) {
+                mostrarError(input, 'La cantidad no puede ser negativa');
+                return false;
+            }
+            
+            limpiarError(input);
+            return true;
+        }
+
+        function validarPrecio(input) {
+            const valor = input.value.trim();
+            const regex = /^\d+(\.\d{1,2})?$/;
+            
+            if (!valor) {
+                mostrarError(input, 'El precio es obligatorio');
+                return false;
+            }
+            
+            if (!regex.test(valor)) {
+                mostrarError(input, 'El precio debe ser un número con hasta 2 decimales');
+                return false;
+            }
+            
+            const precio = parseFloat(valor);
+            if (precio <= 0) {
+                mostrarError(input, 'El precio debe ser mayor a 0');
+                return false;
+            }
+            
+            limpiarError(input);
+            return true;
+        }
+
+        // Validación en tiempo real
+        const nombreInput = document.getElementById('nombre');
+        const categoriaSelect = document.getElementById('categoria');
+        const cantidadInput = document.getElementById('cantidad');
+        const precioInput = document.getElementById('precio');
+
+        if (nombreInput) nombreInput.addEventListener('blur', function() { validarNombre(this); });
+        if (categoriaSelect) categoriaSelect.addEventListener('change', function() { validarCategoria(this); });
+        if (cantidadInput) cantidadInput.addEventListener('blur', function() { validarCantidad(this); });
+        if (precioInput) precioInput.addEventListener('blur', function() { validarPrecio(this); });
+
+        // Validación completa al enviar formulario
+        const formEditar = document.getElementById('form-editar');
+        if (formEditar) {
+            formEditar.addEventListener('submit', function(e) {
+                let valido = true;
+                
+                if (!validarNombre(this.nombre)) valido = false;
+                if (!validarCategoria(this.categoria)) valido = false;
+                if (!validarCantidad(this.cantidad)) valido = false;
+                if (!validarPrecio(this.precio)) valido = false;
+                
+                if (!valido) {
+                    e.preventDefault();
+                    const boton = this.querySelector('button[type="submit"]');
+                    if (boton) {
+                        boton.disabled = false;
+                        boton.innerHTML = '<i class="fas fa-save me-2"></i>Guardar Cambios';
+                    }
+                    
+                    // Desplazar al primer error
+                    const primerError = this.querySelector('.error-mensaje[style="display: block;"]');
+                    if (primerError) {
+                        primerError.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    }
+                } else {
+                    // Mostrar spinner de carga
+                    const boton = document.getElementById('btn-guardar');
+                    boton.disabled = true;
+                    boton.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Guardando...';
+                    // El formulario se enviará automáticamente
+                }
+            });
+        }
+
+        // Confirmación para cancelar
+        const btnCancelar = document.querySelector('.btn.rojo');
+        if (btnCancelar) {
+            btnCancelar.addEventListener('click', function(e) {
+                const form = document.getElementById('form-editar');
+                const nombre = document.getElementById('nombre').value;
+                const categoria = document.getElementById('categoria').value;
+                const cantidad = document.getElementById('cantidad').value;
+                const precio = document.getElementById('precio').value;
+                
+                // Verificar si hay cambios sin guardar
+                if (nombre !== "{{ producto[2] }}" || categoria !== "{{ producto[3] }}" || 
+                    cantidad !== "{{ producto[4] }}" || precio !== "{{ producto[5] }}") {
+                    e.preventDefault();
+                    
+                    const modal = document.getElementById('modal-confirmacion');
+                    const mensaje = document.getElementById('mensaje-confirmacion');
+                    const btnConfirmar = document.getElementById('btn-confirmar');
+                    
+                    mensaje.textContent = '¿Estás seguro de que deseas cancelar? Tienes cambios sin guardar.';
+                    modal.style.display = 'flex';
+                    
+                    btnConfirmar.onclick = function() {
+                        window.location.href = "{{ url_for('inventario.inventario') }}";
+                    };
+                    
+                    document.getElementById('btn-cancelar-modal').onclick = function() {
+                        modal.style.display = 'none';
+                    };
+                }
+            });
+        }
+        
+        // Cerrar modal haciendo clic fuera
+        const modal = document.getElementById('modal-confirmacion');
+        if (modal) {
+            modal.addEventListener('click', function(e) {
+                if (e.target === modal) {
+                    modal.style.display = 'none';
+                }
+            });
+        }
+    });
+
+    // Función para validar el formulario (compatibilidad con el atributo onsubmit)
+    function validarFormularioEdicion() {
+        const form = document.getElementById('form-editar');
+        const event = new Event('submit', { cancelable: true });
+        const isNotCancelled = form.dispatchEvent(event);
+        
+        if (!isNotCancelled) {
+            // Si hay errores, prevenir el envío
+            return false;
+        }
+        // Si todo está bien, permitir el envío
+        return true;
+    }
+    </script>
+</body>
+</html>

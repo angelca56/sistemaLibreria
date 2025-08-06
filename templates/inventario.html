@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Inventario - Librería Flor del Barrio</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/inventario.css') }}">
+</head>
+<body>
+    <div class="container">
+        <!-- Encabezado -->
+        <header class="header-principal">
+            <h1><i class="fas fa-boxes"></i> Inventario Librería</h1>
+        </header>
+
+        <!-- Barra superior -->
+        <div class="barra-superior">
+            <a href="{{ url_for('login.paneles') }}" class="btn salir">
+                <i class="fas fa-sign-out-alt"></i> Salir
+            </a>
+            <div class="valor-total">
+                <span>Valor total del inventario:</span>
+                <span class="monto">Q{{ "%.2f"|format(valor_final) }}</span>
+            </div>
+        </div>
+
+        <!-- Secciones principales -->
+        <div class="secciones">
+            <!-- Sección de agregar producto -->
+            <section class="seccion-formulario">
+                <div class="card">
+                    <h2><i class="fas fa-plus-circle"></i> Agregar Producto</h2>
+                    <form id="form-agregar" action="{{ url_for('inventario.agregar_producto') }}" method="POST">
+                        <div class="grupo-formulario">
+                            <label for="codigo"><i class="fas fa-barcode"></i> Código:</label>
+                            <input type="number" name="codigo" id="codigo" placeholder="Código del producto" required>
+                        </div>
+                        <div class="grupo-formulario">
+                            <label for="nombre"><i class="fas fa-tag"></i> Nombre:</label>
+                            <input type="text" name="nombre" id="nombre" placeholder="Nombre del producto" required>
+                        </div>
+                        <div class="grupo-formulario">
+                            <label for="categoria"><i class="fas fa-boxes"></i> Categoría:</label>
+                            <select name="categoria" id="categoria" required>
+                                <option value="">Seleccione categoría</option>
+                                <option value="Libros">Libros</option>
+                                <option value="Papelería">Papelería</option>
+                                <option value="Material Escolar">Material Escolar</option>
+                                <option value="Arte">Arte</option>
+                                <option value="Otros">Otros</option>
+                            </select>
+                        </div>
+                        <div class="grupo-formulario">
+                            <label for="cantidad"><i class="fas fa-layer-group"></i> Cantidad:</label>
+                            <input type="number" name="cantidad" id="cantidad" placeholder="Cantidad inicial" min="1" required>
+                        </div>
+                        <div class="grupo-formulario">
+                            <label for="precio"><i class="fas fa-dollar-sign"></i> Precio:</label>
+                            <input type="number" name="precio" id="precio" placeholder="Precio unitario" step="0.01" min="0" required>
+                        </div>
+                        <div class="botones-formulario">
+                            <button type="submit" class="btn verde" id="btn-agregar">
+                                <i class="fas fa-save"></i> Agregar Producto
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </section>
+
+            <!-- Sección de movimientos -->
+            <section class="seccion-movimientos">
+                <div class="card">
+                    <h2><i class="fas fa-exchange-alt"></i> Movimientos</h2>
+                    <div class="movimientos-container">
+                        <form id="form-ingreso" action="{{ url_for('inventario.ingreso_producto') }}" method="POST" class="form-movimiento">
+                            <h3><i class="fas fa-arrow-down"></i> Ingreso</h3>
+                            <div class="grupo-formulario">
+                                <label for="ingreso-codigo"><i class="fas fa-barcode"></i> Código:</label>
+                                <input type="number" name="codigo" id="ingreso-codigo" placeholder="Código del producto" required>
+                            </div>
+                            <div class="grupo-formulario">
+                                <label for="ingreso-cantidad"><i class="fas fa-plus"></i> Cantidad:</label>
+                                <input type="number" name="cantidad" id="ingreso-cantidad" placeholder="Cantidad a ingresar" min="1" required>
+                            </div>
+                            <button type="submit" class="btn verde" id="btn-ingreso">
+                                <i class="fas fa-check"></i> Registrar Ingreso
+                            </button>
+                        </form>
+
+                        <form id="form-egreso" action="{{ url_for('inventario.egreso_producto') }}" method="POST" class="form-movimiento">
+                            <h3><i class="fas fa-arrow-up"></i> Egreso</h3>
+                            <div class="grupo-formulario">
+                                <label for="egreso-codigo"><i class="fas fa-barcode"></i> Código:</label>
+                                <input type="number" name="codigo" id="egreso-codigo" placeholder="Código del producto" required>
+                            </div>
+                            <div class="grupo-formulario">
+                                <label for="egreso-cantidad"><i class="fas fa-minus"></i> Cantidad:</label>
+                                <input type="number" name="cantidad" id="egreso-cantidad" placeholder="Cantidad a egresar" min="1" required>
+                            </div>
+                            <button type="submit" class="btn rojo" id="btn-egreso">
+                                <i class="fas fa-check"></i> Registrar Egreso
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <!-- Búsqueda y tabla -->
+        <section class="seccion-tabla">
+            <div class="busqueda-container">
+                <div class="buscador">
+                    <i class="fas fa-search"></i>
+                    <input type="text" id="busqueda" placeholder="Buscar por código, nombre o categoría...">
+                </div>
+                <div class="contador">
+                    <span id="total-productos">{{ productos|length }}</span> productos registrados
+                </div>
+            </div>
+
+            <div class="tabla-scroll">
+                <table id="tabla-productos">
+                    <thead>
+                        <tr>
+                            <th><i class="fas fa-barcode"></i> Código</th>
+                            <th><i class="fas fa-tag"></i> Nombre</th>
+                            <th><i class="fas fa-boxes"></i> Categoría</th>
+                            <th><i class="fas fa-box-open"></i> Stock</th>
+                            <th><i class="fas fa-dollar-sign"></i> Precio</th>
+                            <th><i class="fas fa-calculator"></i> Valor Total</th>
+                            <th><i class="fas fa-cog"></i> Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for producto in productos %}
+                        <tr data-codigo="{{ producto[1] }}" data-nombre="{{ producto[2] }}" data-categoria="{{ producto[3] }}">
+                            <td>{{ producto[1] }}</td>
+                            <td>{{ producto[2] }}</td>
+                            <td><span class="badge categoria">{{ producto[3] }}</span></td>
+                            <td>
+                                <span class="stock {% if producto[4] < 10 %}bajo{% else %}normal{% endif %}">
+                                    {{ producto[4] }}
+                                </span>
+                            </td>
+                            <td>Q{{ "%.2f"|format(producto[5]) }}</td>
+                            <td>Q{{ "%.2f"|format(producto[4] * producto[5]) }}</td>
+                            <td class="acciones">
+                                <a href="{{ url_for('inventario.editar_producto', producto_id=producto[0]) }}" class="btn azul" title="Editar">
+                                    <i class="fas fa-edit"></i>
+                                </a>
+                                <form action="{{ url_for('inventario.eliminar_producto', producto_id=producto[0]) }}" method="POST" class="form-eliminar">
+                                    <button type="submit" class="btn rojo" title="Eliminar">
+                                        <i class="fas fa-trash-alt"></i>
+                                    </button>
+                                </form>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </section>
+    </div>
+
+    <!-- Modal de confirmación -->
+    <div class="modal" id="modal-confirmacion">
+        <div class="modal-contenido">
+            <p id="mensaje-confirmacion"></p>
+            <div class="modal-botones">
+                <button class="btn gris" id="btn-cancelar-modal">Cancelar</button>
+                <button class="btn rojo" id="btn-confirmar">Confirmar</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/inventario.js') }}"></script>
+</body>
+</html>

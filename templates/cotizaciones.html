@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Sistema de Cotizaciones - Librería Flor del Barrio</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/cotizaciones.css') }}">
+</head>
+<body>
+    <div class="container py-4">
+        <!-- Encabezado con mensaje de bienvenida -->
+        <header class="header-principal">
+            <h1 class="display-4">
+                <i class="fas fa-file-invoice-dollar me-2"></i>Sistema de Cotizaciones
+            </h1>
+            <p class="subtitulo">Bienvenido al sistema de cotizaciones de Librería Flor del Barrio</p>
+        </header>
+
+        <!-- Barra de acciones -->
+        <div class="barra-acciones">
+            <div class="botones-accion">
+                <a href="{{ url_for('login.paneles') }}" class="btn rojo">
+                    <i class="fas fa-sign-out-alt me-2"></i>Salir
+                </a>
+            </div>
+        </div>
+
+        <!-- Sección para crear nueva cotización -->
+        <section class="card shadow mb-5">
+            <div class="card-header">
+                <h2 class="h4 mb-0"><i class="fas fa-plus-circle me-2"></i>Nueva Cotización</h2>
+            </div>
+            <div class="card-body">
+                <form id="formCotizacion" method="POST">
+                    <!-- Datos del cliente -->
+                    <div class="row mb-4">
+                        <div class="col-md-6">
+                            <div class="grupo-formulario">
+                                <label for="cliente">
+                                    <i class="fas fa-user me-2"></i>Cliente <span class="text-danger">*</span>
+                                </label>
+                                <input type="text" id="cliente" name="cliente" class="form-control" required>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="grupo-formulario">
+                                <label for="fecha">
+                                    <i class="fas fa-calendar me-2"></i>Fecha
+                                </label>
+                                <input type="text" id="fecha" class="form-control" 
+                                       value="{{ datetime.now().strftime('%d/%m/%Y') }}" readonly>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Búsqueda y selección de productos -->
+                    <div class="mb-4">
+                        <div class="grupo-formulario">
+                            <label>
+                                <i class="fas fa-search me-2"></i>Buscar y agregar productos
+                            </label>
+                            <div class="buscador">
+                                <input type="text" id="buscarProducto" class="form-control" 
+                                       placeholder="Escribe para buscar productos...">
+                                <button class="btn buscar" type="button" id="btnBuscar">
+                                    <i class="fas fa-search"></i>
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Lista de productos disponibles -->
+                        <div class="contenedor-tabla">
+                            <div class="tabla-scroll">
+                                <table class="table" id="tablaProductos">
+                                    <thead>
+                                        <tr>
+                                            <th><i class="fas fa-barcode me-2"></i>Código</th>
+                                            <th><i class="fas fa-box-open me-2"></i>Producto</th>
+                                            <th><i class="fas fa-tags me-2"></i>Categoría</th>
+                                            <th><i class="fas fa-dollar-sign me-2"></i>Precio</th>
+                                            <th><i class="fas fa-boxes me-2"></i>Stock</th>
+                                            <th><i class="fas fa-cog me-2"></i>Acción</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for producto in productos %}
+                                        <tr data-id="{{ producto[0] }}" data-precio="{{ producto[5] }}" class="{{ 'fila-par' if loop.index0 % 2 == 0 else 'fila-impar' }}">
+                                            <td>{{ producto[1] }}</td>
+                                            <td>{{ producto[2] }}</td>
+                                            <td>{{ producto[3] }}</td>
+                                            <td>Q{{ "%.2f"|format(producto[5]) }}</td>
+                                            <td>{{ producto[4] }}</td>
+                                            <td class="acciones">
+                                                <button type="button" class="btn btn-sm verde btn-agregar">
+                                                    <i class="fas fa-plus"></i> Agregar
+                                                </button>
+                                            </td>
+                                        </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Productos seleccionados -->
+                    <div class="mb-4">
+                        <h5 class="mb-3"><i class="fas fa-shopping-cart me-2"></i>Productos seleccionados</h5>
+                        <div class="contenedor-tabla">
+                            <div class="tabla-scroll">
+                                <table class="table" id="tablaSeleccionados">
+                                    <thead>
+                                        <tr>
+                                            <th><i class="fas fa-box-open me-2"></i>Producto</th>
+                                            <th><i class="fas fa-dollar-sign me-2"></i>Precio Unitario</th>
+                                            <th><i class="fas fa-hashtag me-2"></i>Cantidad</th>
+                                            <th><i class="fas fa-calculator me-2"></i>Subtotal</th>
+                                            <th><i class="fas fa-cog me-2"></i>Acción</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <!-- Aquí se agregarán dinámicamente los productos seleccionados -->
+                                    </tbody>
+                                    <tfoot>
+                                        <tr>
+                                            <td colspan="3" class="text-end fw-bold">TOTAL:</td>
+                                            <td id="totalCotizacion" class="fw-bold">Q0.00</td>
+                                            <td></td>
+                                        </tr>
+                                    </tfoot>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Botones de acción -->
+                    <div class="botones-formulario">
+                        <button type="reset" class="btn gris">
+                            <i class="fas fa-undo me-2"></i>Limpiar
+                        </button>
+                        <button type="submit" class="btn azul">
+                            <i class="fas fa-save me-2"></i>Guardar Cotización
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </section>
+
+        <!-- Historial de cotizaciones -->
+        <section class="card shadow">
+            <div class="card-header">
+                <h2 class="h4 mb-0"><i class="fas fa-history me-2"></i>Historial de Cotizaciones</h2>
+            </div>
+            <div class="card-body">
+                {% if cotizaciones %}
+                <div class="contenedor-tabla">
+                    <div class="tabla-scroll">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th><i class="fas fa-id-card me-2"></i>ID</th>
+                                    <th><i class="fas fa-calendar-day me-2"></i>Fecha</th>
+                                    <th><i class="fas fa-user me-2"></i>Cliente</th>
+                                    <th><i class="fas fa-dollar-sign me-2"></i>Total</th>
+                                    <th><i class="fas fa-cog me-2"></i>Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for c in cotizaciones %}
+                                <tr class="{{ 'fila-par' if loop.index0 % 2 == 0 else 'fila-impar' }}">
+                                    <td>{{ c[0] }}</td>
+                                    <td>{{ c[1] }} {{ c[2] }}</td>
+                                    <td>{{ c[4] }}</td>
+                                    <td>Q{{ "%.2f"|format(c[5] if c[5] is not none else 0.00) }}</td>
+                                    <td class="acciones">
+                                        <a href="{{ url_for('cotizaciones.generar_pdf', id=c[0]) }}" 
+                                           class="btn btn-sm rojo" title="Descargar PDF">
+                                            <i class="fas fa-file-pdf"></i>
+                                        </a>
+                                        <button class="btn btn-sm azul btn-ver-detalle" 
+                                                data-id="{{ c[0] }}" title="Ver detalle">
+                                            <i class="fas fa-eye"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                {% else %}
+                <div class="alert alert-info">
+                    <i class="fas fa-info-circle me-2"></i>No hay cotizaciones registradas.
+                </div>
+                {% endif %}
+            </div>
+        </section>
+    </div>
+
+    <!-- Modal para ver detalle de cotización -->
+    <div class="modal fade" id="modalDetalle" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title"><i class="fas fa-file-invoice me-2"></i>Detalle de Cotización</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body" id="detalleCotizacion">
+                    <!-- Contenido cargado dinámicamente -->
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn gris" data-bs-dismiss="modal">Cerrar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="{{ url_for('static', filename='js/cotizaciones.js') }}"></script>
+</body>
+</html>

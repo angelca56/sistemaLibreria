@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Menú Principal - Librería Flor del Barrio</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/paneles.css') }}">
+</head>
+<body>
+    <div class="container">
+        <header class="header-principal">
+            <h1><i class="fas fa-home me-2"></i>Menú Principal</h1>
+            <p class="subtitulo">Bienvenido, {{ nombres }}</p>
+        </header>
+
+        <div class="panel-grid">
+            <div class="panel-card" onclick="window.location.href='/cotizaciones'">
+                <div class="panel-icon verde">
+                    <i class="fas fa-file-invoice-dollar"></i>
+                </div>
+                <h3>Cotizaciones</h3>
+                <p>Gestión de cotizaciones a clientes</p>
+            </div>
+
+            <div class="panel-card" onclick="window.location.href='/inventario'">
+                <div class="panel-icon azul">
+                    <i class="fas fa-boxes"></i>
+                </div>
+                <h3>Inventario</h3>
+                <p>Administración de productos</p>
+            </div>
+
+            <div class="panel-card" onclick="window.location.href='/usuarios'">
+                <div class="panel-icon morado">
+                    <i class="fas fa-users-cog"></i>
+                </div>
+                <h3>Usuarios</h3>
+                <p>Gestión de usuarios del sistema</p>
+            </div>
+
+            <div class="panel-card" onclick="window.location.href='/logout'">
+                <div class="panel-icon rojo">
+                    <i class="fas fa-sign-out-alt"></i>
+                </div>
+                <h3>Cerrar Sesión</h3>
+                <p>Salir del sistema</p>
+            </div>
+        </div>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/paneles.js') }}"></script>
+</body>
+</html>

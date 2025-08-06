@@ -1,0 +1,500 @@
+:root {
+    --bg-primary: #121212;
+    --bg-secondary: #1e1e1e;
+    --bg-card: #2d2d2d;
+    --text-primary: #ffffff;
+    --text-secondary: #a0a0a0;
+    --accent-color: #bb86fc;
+    --danger-color: #ff4444;
+    --success-color: #28a745;
+    --info-color: #2196f3;
+    --warning-color: #ff9800;
+    --border-color: #333333;
+}
+
+body {
+    background-color: var(--bg-primary);
+    color: var(--text-primary);
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    padding: 20px;
+    min-height: 100vh;
+    line-height: 1.6;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: var(--bg-card);
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+/* Encabezado */
+.header-principal {
+    text-align: center;
+    margin-bottom: 30px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.header-principal h1 {
+    color: var(--accent-color);
+    font-size: 2rem;
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+}
+
+.header-principal .subtitulo {
+    color: var(--text-secondary);
+    font-size: 1.1rem;
+}
+
+/* Barra de acciones */
+.barra-acciones {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 25px;
+    flex-wrap: wrap;
+    gap: 15px;
+}
+
+.botones-accion {
+    display: flex;
+    gap: 10px;
+}
+
+.buscador {
+    display: flex;
+    flex-grow: 1;
+    max-width: 400px;
+}
+
+.buscador input {
+    flex-grow: 1;
+    padding: 10px 15px;
+    border-radius: 6px 0 0 6px;
+    border: 1px solid var(--border-color);
+    background-color: var(--bg-secondary);
+    color: var(--text-primary);
+}
+
+.buscador .btn.buscar {
+    border-radius: 0 6px 6px 0;
+    padding: 10px 15px;
+    background-color: var(--bg-secondary);
+    border: 1px solid var(--border-color);
+    border-left: none;
+}
+
+/* Contenedor de tabla */
+.contenedor-tabla {
+    margin-bottom: 40px;
+}
+
+/* Tabla */
+.tabla-scroll {
+    overflow-x: auto;
+    border-radius: 10px;
+    background-color: var(--bg-secondary);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    min-width: 800px;
+}
+
+th, td {
+    padding: 14px 16px;
+    text-align: left;
+    border-bottom: 1px solid var(--border-color);
+}
+
+thead {
+    background-color: var(--bg-secondary);
+}
+
+thead th {
+    color: var(--accent-color);
+    font-weight: 600;
+    font-size: 0.9rem;
+    white-space: nowrap;
+}
+
+thead th i {
+    margin-right: 8px;
+}
+
+tbody tr {
+    background-color: var(--bg-card);
+    transition: background-color 0.2s;
+}
+
+tbody tr:hover {
+    background-color: rgba(187, 134, 252, 0.1);
+}
+
+/* Filas alternas */
+.fila-par {
+    background-color: rgba(255, 255, 255, 0.03);
+}
+
+.fila-impar {
+    background-color: rgba(0, 0, 0, 0.1);
+}
+
+/* Estilos para contraseña */
+.contrasena {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.texto-contrasena {
+    letter-spacing: 2px;
+}
+
+.btn-ver-contrasena {
+    background: none;
+    border: none;
+    color: var(--accent-color);
+    cursor: pointer;
+    padding: 5px;
+    font-size: 0.9rem;
+}
+
+/* Badges para roles */
+.badge {
+    display: inline-block;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 0.8rem;
+    font-weight: 500;
+}
+
+.rol-administrador {
+    background-color: rgba(187, 134, 252, 0.2);
+    color: var(--accent-color);
+}
+
+.rol-editor {
+    background-color: rgba(33, 150, 243, 0.2);
+    color: var(--info-color);
+}
+
+.rol-vendedor {
+    background-color: rgba(40, 167, 69, 0.2);
+    color: var(--success-color);
+}
+
+/* Acciones en tabla */
+.acciones {
+    display: flex;
+    gap: 8px;
+    justify-content: center;
+}
+
+.acciones .btn {
+    min-width: auto;
+    padding: 8px 12px;
+}
+
+/* Formulario */
+.contenedor-formulario {
+    background-color: var(--bg-secondary);
+    padding: 25px;
+    border-radius: 10px;
+    margin-top: 30px;
+    display: none; /* Oculto por defecto */
+}
+
+.contenedor-formulario h2 {
+    text-align: left;
+    margin-top: 0;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.grupo-formulario {
+    margin-bottom: 20px;
+}
+
+.grupo-formulario label {
+    display: block;
+    margin-bottom: 8px;
+    color: var(--text-primary);
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.grupo-formulario input,
+.grupo-formulario select {
+    width: 100%;
+    padding: 12px 15px;
+    border-radius: 6px;
+    border: 1px solid var(--border-color);
+    background-color: var(--bg-card);
+    color: var(--text-primary);
+    font-size: 1rem;
+    transition: all 0.3s;
+}
+
+.grupo-formulario input:focus,
+.grupo-formulario select:focus {
+    border-color: var(--accent-color);
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(187, 134, 252, 0.25);
+}
+
+.input-contrasena {
+    position: relative;
+    display: flex;
+}
+
+.input-contrasena input {
+    padding-right: 40px;
+    flex-grow: 1;
+}
+
+.input-contrasena .btn-ver-contrasena {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    color: var(--text-secondary);
+    cursor: pointer;
+}
+
+.error-mensaje {
+    color: var(--danger-color);
+    font-size: 0.85rem;
+    margin-top: 5px;
+    display: none;
+}
+
+.botones-formulario {
+    display: flex;
+    gap: 15px;
+    margin-top: 20px;
+}
+
+.botones-formulario .btn {
+    flex: 1;
+    padding: 12px;
+}
+
+/* Modal */
+.modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7);
+    z-index: 1000;
+    justify-content: center;
+    align-items: center;
+}
+
+.modal-contenido {
+    background-color: var(--bg-card);
+    padding: 25px;
+    border-radius: 10px;
+    max-width: 500px;
+    width: 90%;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+}
+
+.modal-contenido p {
+    margin-bottom: 20px;
+    font-size: 1.1rem;
+}
+
+.modal-botones {
+    display: flex;
+    gap: 15px;
+    justify-content: flex-end;
+}
+
+/* Botones */
+.btn {
+    padding: 10px 16px;
+    border-radius: 6px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s;
+    border: none;
+    text-align: center;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+.btn i {
+    font-size: 0.9em;
+}
+
+.btn.rojo {
+    background-color: var(--danger-color);
+    color: white;
+}
+
+.btn.rojo:hover {
+    background-color: #d32f2f;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+}
+
+.btn.azul {
+    background-color: var(--info-color);
+    color: white;
+}
+
+.btn.azul:hover {
+    background-color: #1976d2;
+    transform: translateY(-2px);
+}
+
+.btn.verde {
+    background-color: var(--success-color);
+    color: white;
+}
+
+.btn.verde:hover {
+    background-color: #388e3c;
+    transform: translateY(-2px);
+}
+
+.btn.gris {
+    background-color: var(--bg-secondary);
+    color: var(--text-primary);
+}
+
+.btn.gris:hover {
+    background-color: #333;
+    transform: translateY(-2px);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .container {
+        padding: 15px;
+    }
+    
+    .barra-acciones {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    
+    .botones-accion {
+        justify-content: space-between;
+    }
+    
+    .buscador {
+        max-width: 100%;
+    }
+    
+    .contenedor-formulario {
+        padding: 20px;
+    }
+    
+    .botones-formulario {
+        flex-direction: column;
+    }
+    
+    .modal-botones {
+        justify-content: center;
+    }
+    
+    th, td {
+        padding: 10px 12px;
+    }
+    
+    .acciones {
+        flex-direction: column;
+        gap: 5px;
+    }
+    
+    .acciones .btn {
+        width: 100%;
+    }
+}
+
+@media (max-width: 480px) {
+    .header-principal h1 {
+        font-size: 1.6rem;
+        flex-direction: column;
+    }
+    
+    .botones-accion {
+        flex-direction: column;
+        width: 100%;
+    }
+    
+    .botones-accion .btn {
+        width: 100%;
+    }
+}
+
+@media (max-width: 480px) {
+    .container {
+        padding: 12px;
+    }
+    
+    .header-principal h1 {
+        font-size: 1.5rem;
+        gap: 6px;
+    }
+    
+    .header-principal .subtitulo {
+        font-size: 0.95rem;
+    }
+    
+    .barra-acciones {
+        flex-direction: column;
+        gap: 10px;
+    }
+    
+    .botones-accion {
+        width: 100%;
+        flex-direction: row; /* Mantiene los botones en línea */
+        justify-content: space-between;
+        gap: 8px;
+    }
+    
+    .botones-accion .btn {
+        padding: 8px 12px;
+        font-size: 0.9rem;
+        flex-grow: 1;
+        min-width: 0;
+    }
+    
+    .botones-accion .btn i {
+        font-size: 0.8em;
+        margin-right: 4px;
+    }
+    
+    .buscador {
+        width: 100%;
+        max-width: 100%;
+    }
+    
+    /* Ajuste específico para el botón de salir */
+    .botones-accion .btn.rojo {
+        flex: 1 1 auto; /* Permite flexibilidad en el tamaño */
+        white-space: nowrap; /* Evita que el texto se divida */
+    }
+}

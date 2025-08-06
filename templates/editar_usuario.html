@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Editar Usuario - Librería Flor del Barrio</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/usuarios.css') }}">
+</head>
+<body>
+    <div class="container">
+        <!-- Encabezado con icono -->
+        <header class="header-principal">
+            <h1><i class="fas fa-user-edit"></i> Editar Usuario</h1>
+            <p class="subtitulo">Modifica los datos del usuario seleccionado</p>
+        </header>
+
+        <!-- Formulario de edición -->
+        <div class="contenedor-formulario" style="display: block;">
+            <form method="POST" action="{{ url_for('usuarios.actualizar_usuario', usuario_id=usuario[0]) }}" id="form-editar-usuario">
+                <div class="grupo-formulario">
+                    <label for="nombre"><i class="fas fa-id-card"></i> Nombre:</label>
+                    <input type="text" name="nombre" id="nombre" value="{{ usuario[1] }}" required>
+                    <div class="error-mensaje" id="error-nombre"></div>
+                </div>
+
+                <div class="grupo-formulario">
+                    <label for="apellido"><i class="fas fa-id-card"></i> Apellido:</label>
+                    <input type="text" name="apellido" id="apellido" value="{{ usuario[2] }}" required>
+                    <div class="error-mensaje" id="error-apellido"></div>
+                </div>
+
+                <div class="grupo-formulario">
+                    <label for="correo"><i class="fas fa-envelope"></i> Correo:</label>
+                    <input type="email" name="correo" id="correo" value="{{ usuario[3] }}" required>
+                    <div class="error-mensaje" id="error-correo"></div>
+                </div>
+
+                <div class="grupo-formulario">
+                    <label for="contrasena"><i class="fas fa-key"></i> Contraseña:</label>
+                    <div class="input-contrasena">
+                        <input type="password" name="contrasena" id="contrasena" value="{{ usuario[4] }}" required minlength="6">
+                        <button type="button" class="btn-ver-contrasena">
+                            <i class="fas fa-eye"></i>
+                        </button>
+                    </div>
+                    <div class="error-mensaje" id="error-contrasena"></div>
+                </div>
+
+                <div class="grupo-formulario">
+                    <label for="rol"><i class="fas fa-user-tag"></i> Rol:</label>
+                    <select name="rol" id="rol" required>
+                        <option value="">Seleccione un rol</option>
+                        <option value="Administrador" {% if usuario[5] == 'Administrador' %}selected{% endif %}>Administrador</option>
+                        <option value="Editor" {% if usuario[5] == 'Editor' %}selected{% endif %}>Editor</option>
+                        <option value="Vendedor" {% if usuario[5] == 'Vendedor' %}selected{% endif %}>Vendedor</option>
+                    </select>
+                    <div class="error-mensaje" id="error-rol"></div>
+                </div>
+
+                <div class="botones-formulario">
+                    <a href="{{ url_for('usuarios.usuarios') }}" class="btn gris">
+                        <i class="fas fa-times"></i> Cancelar
+                    </a>
+                    <button type="submit" class="btn verde">
+                        <i class="fas fa-save"></i> Actualizar Usuario
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/usuarios.js') }}"></script>
+    <script>
+        // Función para mostrar/ocultar contraseña en el formulario de edición
+        document.querySelector('.input-contrasena .btn-ver-contrasena').addEventListener('click', function() {
+            const input = document.getElementById('contrasena');
+            if (input.type === 'password') {
+                input.type = 'text';
+                this.innerHTML = '<i class="fas fa-eye-slash"></i>';
+            } else {
+                input.type = 'password';
+                this.innerHTML = '<i class="fas fa-eye"></i>';
+            }
+        });
+
+        // Validación del formulario
+        function validarFormulario() {
+            let valido = true;
+            
+            // Validar nombre
+            if (document.getElementById('nombre').value.trim().length < 3) {
+                document.getElementById('error-nombre').textContent = 'El nombre debe tener al menos 3 caracteres';
+                document.getElementById('error-nombre').style.display = 'block';
+                valido = false;
+            } else {
+                document.getElementById('error-nombre').style.display = 'none';
+            }
+            
+            // Validar apellido
+            if (document.getElementById('apellido').value.trim().length < 3) {
+                document.getElementById('error-apellido').textContent = 'El apellido debe tener al menos 3 caracteres';
+                document.getElementById('error-apellido').style.display = 'block';
+                valido = false;
+            } else {
+                document.getElementById('error-apellido').style.display = 'none';
+            }
+            
+            // Validar correo
+            const emailRegex = /^[^@\s]+@[^@\s]+\.[^@\s]+$/;
+            if (!emailRegex.test(document.getElementById('correo').value.trim())) {
+                document.getElementById('error-correo').textContent = 'Ingresa un correo válido';
+                document.getElementById('error-correo').style.display = 'block';
+                valido = false;
+            } else {
+                document.getElementById('error-correo').style.display = 'none';
+            }
+            
+            // Validar contraseña
+            if (document.getElementById('contrasena').value.length < 6) {
+                document.getElementById('error-contrasena').textContent = 'La contraseña debe tener al menos 6 caracteres';
+                document.getElementById('error-contrasena').style.display = 'block';
+                valido = false;
+            } else {
+                document.getElementById('error-contrasena').style.display = 'none';
+            }
+            
+            // Validar rol
+            if (document.getElementById('rol').value === '') {
+                document.getElementById('error-rol').textContent = 'Selecciona un rol válido';
+                document.getElementById('error-rol').style.display = 'block';
+                valido = false;
+            } else {
+                document.getElementById('error-rol').style.display = 'none';
+            }
+            
+            return valido;
+        }
+
+        // Asignar la función de validación al formulario
+        document.getElementById('form-editar-usuario').onsubmit = validarFormulario;
+    </script>
+</body>
+</html>

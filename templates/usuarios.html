@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Gestión de Usuarios - Librería Flor del Barrio</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/usuarios.css') }}">
+</head>
+<body>
+    <div class="container">
+        <!-- Encabezado con icono -->
+        <header class="header-principal">
+            <h1><i class="fas fa-users"></i> Gestión de Usuarios</h1>
+            <p class="subtitulo">Administra los usuarios del sistema</p>
+        </header>
+
+        <!-- Barra de acciones superior -->
+        <div class="barra-acciones">
+            <div class="botones-accion">
+                <a href="{{ url_for('login.paneles') }}" class="btn rojo">
+                    <i class="fas fa-sign-out-alt"></i> Salir
+                </a>
+                <button class="btn azul" id="btn-nuevo-usuario">
+                    <i class="fas fa-plus-circle"></i> Nuevo Usuario
+                </button>
+            </div>
+            <div class="buscador">
+                <input type="text" id="buscar-usuario" placeholder="Buscar usuario...">
+                <button class="btn buscar"><i class="fas fa-search"></i></button>
+            </div>
+        </div>
+
+        <!-- Tabla de usuarios -->
+        <div class="contenedor-tabla">
+            <div class="tabla-scroll">
+                <table>
+                    <thead>
+                        <tr>
+                            <th><i class="fas fa-user"></i> Nombre</th>
+                            <th><i class="fas fa-user-tag"></i> Apellido</th>
+                            <th><i class="fas fa-envelope"></i> Correo</th>
+                            <th><i class="fas fa-lock"></i> Contraseña</th>
+                            <th><i class="fas fa-user-shield"></i> Rol</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for usuario in usuarios %}
+                            <tr class="{{ 'fila-par' if loop.index0 % 2 == 0 else 'fila-impar' }}">
+                                <td>{{ usuario[1] }}</td>
+                                <td>{{ usuario[2] }}</td>
+                                <td>{{ usuario[3] }}</td>
+                                <td>
+                                    <div class="contrasena">
+                                        <span class="texto-contrasena">•••••••</span>
+                                        <button class="btn-ver-contrasena" data-contrasena="{{ usuario[4] }}">
+                                            <i class="fas fa-eye"></i>
+                                        </button>
+                                    </div>
+                                </td>
+                                <td>
+                                    <span class="badge rol-{{ usuario[5]|lower }}">{{ usuario[5] }}</span>
+                                </td>
+                                <td class="acciones">
+                                    <a href="{{ url_for('usuarios.editar_usuario', usuario_id=usuario[0]) }}" 
+                                    class="btn azul" title="Editar">
+                                        <i class="fas fa-edit"></i>
+                                    </a>
+                                    <form action="{{ url_for('usuarios.eliminar_usuario', usuario_id=usuario[0]) }}" 
+                                        method="POST" 
+                                        class="form-eliminar">
+                                        <button type="submit" class="btn rojo" title="Eliminar">
+                                            <i class="fas fa-trash-alt"></i>
+                                        </button>
+                                    </form>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Formulario de registro (inicialmente oculto) -->
+        <div class="contenedor-formulario" id="formulario-registro" style="display: none;">
+            <h2><i class="fas fa-user-plus"></i> Registrar Nuevo Usuario</h2>
+            <form id="form-usuario" method="POST">
+                <div class="grupo-formulario">
+                    <label for="nombre"><i class="fas fa-id-card"></i> Nombre:</label>
+                    <input type="text" name="nombre" id="nombre" required>
+                    <div class="error-mensaje" id="error-nombre"></div>
+                </div>
+
+                <div class="grupo-formulario">
+                    <label for="apellido"><i class="fas fa-id-card"></i> Apellido:</label>
+                    <input type="text" name="apellido" id="apellido" required>
+                    <div class="error-mensaje" id="error-apellido"></div>
+                </div>
+
+                <div class="grupo-formulario">
+                    <label for="correo"><i class="fas fa-envelope"></i> Correo:</label>
+                    <input type="email" name="correo" id="correo" required>
+                    <div class="error-mensaje" id="error-correo"></div>
+                </div>
+
+                <div class="grupo-formulario">
+                    <label for="contrasena"><i class="fas fa-key"></i> Contraseña:</label>
+                    <div class="input-contrasena">
+                        <input type="password" name="contrasena" id="contrasena" required minlength="6">
+                        <button type="button" class="btn-ver-contrasena">
+                            <i class="fas fa-eye"></i>
+                        </button>
+                    </div>
+                    <div class="error-mensaje" id="error-contrasena"></div>
+                </div>
+
+                <div class="grupo-formulario">
+                    <label for="rol"><i class="fas fa-user-tag"></i> Rol:</label>
+                    <select name="rol" id="rol" required>
+                        <option value="">Seleccione un rol</option>
+                        <option value="Administrador">Administrador</option>
+                        <option value="Editor">Editor</option>
+                        <option value="Vendedor">Vendedor</option>
+                    </select>
+                    <div class="error-mensaje" id="error-rol"></div>
+                </div>
+
+                <div class="botones-formulario">
+                    <button type="button" class="btn gris" id="btn-cancelar">
+                        <i class="fas fa-times"></i> Cancelar
+                    </button>
+                    <button type="submit" class="btn verde">
+                        <i class="fas fa-save"></i> Registrar Usuario
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal de confirmación -->
+    <div class="modal" id="modal-confirmacion">
+        <div class="modal-contenido">
+            <p id="mensaje-confirmacion">¿Estás seguro de que deseas eliminar este usuario?</p>
+            <div class="modal-botones">
+                <button class="btn gris" id="btn-cancelar-modal">Cancelar</button>
+                <button class="btn rojo" id="btn-confirmar">Confirmar</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/usuarios.js') }}"></script>
+</body>
+</html>

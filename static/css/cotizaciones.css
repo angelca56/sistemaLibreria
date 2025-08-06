@@ -1,0 +1,427 @@
+:root {
+    --bg-primary: #121212;
+    --bg-secondary: #1e1e1e;
+    --bg-card: #2d2d2d;
+    --text-primary: #ffffff;
+    --text-secondary: #a0a0a0;
+    --accent-color: #bb86fc;
+    --danger-color: #ff4444;
+    --success-color: #28a745;
+    --info-color: #2196f3;
+    --warning-color: #ff9800;
+    --border-color: #333333;
+}
+
+body {
+    background-color: var(--bg-primary);
+    color: var(--text-primary);
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    padding: 20px;
+    min-height: 100vh;
+    line-height: 1.6;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: var(--bg-card);
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+/* Encabezado */
+.header-principal {
+    text-align: center;
+    margin-bottom: 30px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.header-principal h1 {
+    color: var(--accent-color);
+    font-size: 2rem;
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+}
+
+.header-principal .subtitulo {
+    color: var(--text-secondary);
+    font-size: 1.1rem;
+}
+
+.divisor {
+    border: 0;
+    height: 1px;
+    background-color: var(--border-color);
+    margin: 20px 0;
+}
+
+/* Barra de acciones */
+.barra-acciones {
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 25px;
+}
+
+.botones-accion {
+    display: flex;
+    gap: 10px;
+}
+
+/* Formularios */
+.card {
+    background-color: var(--bg-secondary);
+    border: 1px solid var(--border-color);
+    margin-bottom: 20px;
+}
+
+.card-header {
+    background-color: var(--bg-secondary) !important;
+    color: var(--accent-color) !important;
+    border-bottom: 1px solid var(--border-color) !important;
+    padding: 15px 20px;
+}
+
+.card-body {
+    padding: 20px;
+}
+
+.grupo-formulario {
+    margin-bottom: 20px;
+}
+
+.grupo-formulario label {
+    display: block;
+    margin-bottom: 8px;
+    color: var(--text-primary);
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.form-control {
+    width: 100%;
+    padding: 12px 15px;
+    border-radius: 6px;
+    border: 1px solid var(--border-color);
+    background-color: var(--bg-card);
+    color: var(--text-primary);
+    font-size: 1rem;
+    transition: all 0.3s;
+}
+
+.form-control:focus {
+    border-color: var(--accent-color);
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(187, 134, 252, 0.25);
+}
+
+/* Buscador */
+.buscador {
+    display: flex;
+    width: 100%;
+}
+
+.buscador input {
+    flex-grow: 1;
+    padding: 10px 15px;
+    border-radius: 6px 0 0 6px;
+    border: 1px solid var(--border-color);
+    background-color: var(--bg-card);
+    color: var(--text-primary);
+}
+
+.buscador .buscar {
+    border-radius: 0 6px 6px 0;
+    padding: 10px 15px;
+    background-color: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-left: none;
+    color: var(--text-primary);
+}
+
+.buscador .buscar:hover {
+    background-color: var(--accent-color);
+    color: white;
+}
+
+/* Tablas */
+.contenedor-tabla {
+    margin-bottom: 25px;
+}
+
+.tabla-scroll {
+    overflow-x: auto;
+    border-radius: 10px;
+    background-color: var(--bg-secondary);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    min-width: 800px;
+}
+
+th, td {
+    padding: 14px 16px;
+    text-align: left;
+    border-bottom: 1px solid var(--border-color);
+}
+
+thead {
+    background-color: var(--bg-secondary);
+}
+
+thead th {
+    color: var(--accent-color);
+    font-weight: 600;
+    font-size: 0.9rem;
+    white-space: nowrap;
+}
+
+thead th i {
+    margin-right: 8px;
+}
+
+tbody tr {
+    background-color: var(--bg-card);
+    transition: background-color 0.2s;
+}
+
+tbody tr:hover {
+    background-color: rgba(187, 134, 252, 0.1);
+}
+
+/* Filas alternas */
+.fila-par {
+    background-color: rgba(255, 255, 255, 0.03);
+}
+
+.fila-impar {
+    background-color: rgba(0, 0, 0, 0.1);
+}
+
+/* Acciones en tabla */
+.acciones {
+    display: flex;
+    gap: 8px;
+    justify-content: center;
+}
+
+.acciones .btn {
+    min-width: auto;
+    padding: 8px 12px;
+}
+
+/* Botones de formulario */
+.botones-formulario {
+    display: flex;
+    gap: 15px;
+    margin-top: 20px;
+}
+
+.botones-formulario .btn {
+    flex: 1;
+    padding: 12px;
+}
+
+/* Alertas */
+.alert {
+    padding: 15px;
+    border-radius: 6px;
+    margin-bottom: 20px;
+}
+
+.alert-info {
+    background-color: rgba(33, 150, 243, 0.2);
+    border-color: rgba(33, 150, 243, 0.3);
+    color: var(--info-color);
+}
+
+/* Modal */
+.modal-content {
+    background-color: var(--bg-card);
+    border: 1px solid var(--border-color);
+}
+
+.modal-header {
+    border-bottom: 1px solid var(--border-color);
+}
+
+.modal-footer {
+    border-top: 1px solid var(--border-color);
+}
+
+.btn-close {
+    filter: invert(1);
+}
+
+/* Botones */
+.btn {
+    padding: 10px 16px;
+    border-radius: 6px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s;
+    border: none;
+    text-align: center;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+.btn i {
+    font-size: 0.9em;
+}
+
+.btn.rojo {
+    background-color: var(--danger-color);
+    color: white;
+}
+
+.btn.rojo:hover {
+    background-color: #d32f2f;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+}
+
+.btn.azul {
+    background-color: var(--info-color);
+    color: white;
+}
+
+.btn.azul:hover {
+    background-color: #1976d2;
+    transform: translateY(-2px);
+}
+
+.btn.verde {
+    background-color: var(--success-color);
+    color: white;
+}
+
+.btn.verde:hover {
+    background-color: #388e3c;
+    transform: translateY(-2px);
+}
+
+.btn.gris {
+    background-color: var(--bg-secondary);
+    color: var(--text-primary);
+    border: 1px solid var(--border-color);
+}
+
+.btn.gris:hover {
+    background-color: #333;
+    transform: translateY(-2px);
+}
+
+/* Estilo para el subtítulo */
+.header-principal .subtitulo {
+    color: var(--text-primary); /* Blanco */
+    font-size: 1.1rem;
+    font-weight: 300; /* Más delgado */
+    letter-spacing: 0.5px; /* Pequeño espaciado entre letras */
+    opacity: 0.9; /* Ligera transparencia */
+}
+
+/* Estilo para el placeholder del buscador */
+.buscador input::placeholder {
+    color: var(--text-secondary); /* Gris claro */
+    opacity: 0.8; /* Transparencia */
+    font-weight: 300;
+}
+
+/* Estilo para el título de productos seleccionados */
+.card-body h5 {
+    color: var(--text-primary); /* Blanco */
+    font-weight: 500;
+    padding: 8px 0;
+    border-bottom: 1px solid var(--border-color); /* Línea decorativa */
+    margin-bottom: 15px;
+}
+
+/* Opcional: mejora para los íconos en títulos */
+.card-body h5 i {
+    color: var(--accent-color); /* Color de acento para el ícono */
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .container {
+        padding: 15px;
+    }
+    
+    .barra-acciones {
+        justify-content: center;
+    }
+    
+    .botones-accion {
+        width: 100%;
+        justify-content: space-between;
+    }
+    
+    .card-body {
+        padding: 15px;
+    }
+    
+    .botones-formulario {
+        flex-direction: column;
+    }
+    
+    th, td {
+        padding: 10px 12px;
+    }
+    
+    .acciones {
+        flex-direction: column;
+        gap: 5px;
+    }
+    
+    .acciones .btn {
+        width: 100%;
+    }
+}
+
+@media (max-width: 480px) {
+    .container {
+        padding: 12px;
+    }
+    
+    .header-principal h1 {
+        font-size: 1.6rem;
+    }
+    
+    .header-principal .subtitulo {
+        font-size: 0.95rem;
+    }
+    
+    .botones-accion {
+        flex-direction: column;
+        width: 100%;
+    }
+    
+    .botones-accion .btn {
+        width: 100%;
+    }
+    
+    .grupo-formulario input,
+    .grupo-formulario select {
+        padding: 10px 12px;
+    }
+    
+    .buscador input {
+        padding: 8px 12px;
+    }
+    
+    .buscador .buscar {
+        padding: 8px 12px;
+    }
+}
