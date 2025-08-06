@@ -450,9 +450,26 @@ tbody tr:hover {
         width: 100%;
     }
     
+    /* Asegurar scroll horizontal en móviles */
+    .tabla-scroll {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+    
+    /* Reducir padding para ahorrar espacio */
+    th, td {
+        padding: 10px 8px;
+        font-size: 0.9rem;
+    }
+    
+    /* Mostrar todas las columnas */
+    table th:nth-child(4),
+    table td:nth-child(4),
+    table th:nth-child(5),
+    table td:nth-child(5),
     table th:nth-child(6),
     table td:nth-child(6) {
-        display: none;
+        display: table-cell;
     }
 }
 
@@ -464,18 +481,38 @@ tbody tr:hover {
     }
     
     .acciones {
-        flex-direction: column;
+        flex-direction: row; /* Mantener botones en línea */
         gap: 5px;
     }
     
     .acciones .btn {
-        width: 100%;
+        width: auto; /* Ancho automático para botones */
+        padding: 6px 8px; /* Reducir padding */
     }
     
+    /* Mostrar todas las columnas */
     table th:nth-child(4),
     table td:nth-child(4),
     table th:nth-child(5),
-    table td:nth-child(5) {
-        display: none;
+    table td:nth-child(5),
+    table th:nth-child(6),
+    table td:nth-child(6) {
+        display: table-cell;
+    }
+
+    /* Ajustes adicionales para pantallas muy pequeñas */
+    th, td {
+        padding: 8px 6px;
+        font-size: 0.85rem;
+    }
+    
+    /* Reducir iconos */
+    .acciones .btn i {
+        font-size: 0.8em;
+    }
+    
+    /* Asegurar ancho mínimo para la tabla */
+    table {
+        min-width: 600px;
     }
 }
