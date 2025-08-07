@@ -5,6 +5,7 @@
     <title>Inventario - Librería Flor del Barrio</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.13.2/themes/base/jquery-ui.min.css">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/inventario.css') }}">
 </head>
 <body>
@@ -76,8 +77,9 @@
                         <form id="form-ingreso" action="{{ url_for('inventario.ingreso_producto') }}" method="POST" class="form-movimiento">
                             <h3><i class="fas fa-arrow-down"></i> Ingreso</h3>
                             <div class="grupo-formulario">
-                                <label for="ingreso-codigo"><i class="fas fa-barcode"></i> Código:</label>
-                                <input type="number" name="codigo" id="ingreso-codigo" placeholder="Código del producto" required>
+                                <label for="ingreso-nombre"><i class="fas fa-tag"></i> Nombre:</label>
+                                <input type="text" name="nombre" id="ingreso-nombre" placeholder="Nombre del producto" required>
+                                <input type="hidden" name="producto_id" id="ingreso-producto-id">
                             </div>
                             <div class="grupo-formulario">
                                 <label for="ingreso-cantidad"><i class="fas fa-plus"></i> Cantidad:</label>
@@ -91,8 +93,9 @@
                         <form id="form-egreso" action="{{ url_for('inventario.egreso_producto') }}" method="POST" class="form-movimiento">
                             <h3><i class="fas fa-arrow-up"></i> Egreso</h3>
                             <div class="grupo-formulario">
-                                <label for="egreso-codigo"><i class="fas fa-barcode"></i> Código:</label>
-                                <input type="number" name="codigo" id="egreso-codigo" placeholder="Código del producto" required>
+                                <label for="egreso-nombre"><i class="fas fa-tag"></i> Nombre:</label>
+                                <input type="text" name="nombre" id="egreso-nombre" placeholder="Nombre del producto" required>
+                                <input type="hidden" name="producto_id" id="egreso-producto-id">
                             </div>
                             <div class="grupo-formulario">
                                 <label for="egreso-cantidad"><i class="fas fa-minus"></i> Cantidad:</label>
@@ -173,7 +176,10 @@
             </div>
         </div>
     </div>
-
+    
+    <!-- jQuery UI para el autocompletado -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.min.js"></script>
     <script src="{{ url_for('static', filename='js/inventario.js') }}"></script>
 </body>
 </html>

@@ -125,6 +125,122 @@ document.addEventListener("DOMContentLoaded", function() {
         return true;
     }
 
+    // Configurar autocompletado para los campos de nombre
+    function setupAutocomplete(inputElement, hiddenId) {
+        $(inputElement).autocomplete({
+            source: function(request, response) {
+                $.ajax({
+                    url: '/buscar_productos',
+                    dataType: 'json',
+                    data: {
+                        term: request.term
+                    },
+                    success: function(data) {
+                        response($.map(data, function(item) {
+                            return {
+                                label: item.nombre + " (" + item.codigo + ") - " + item.categoria,
+                                value: item.nombre,
+                                id: item.id,
+                                codigo: item.codigo,
+                                stock: item.cantidad
+                            };
+                        }));
+                    }
+                });
+            },
+            minLength: 2,
+            select: function(event, ui) {
+                $(hiddenId).val(ui.item.id);
+                // Puedes mostrar información adicional si lo deseas
+                console.log("Producto seleccionado:", ui.item);
+            },
+            change: function(event, ui) {
+                if (!ui.item) {
+                    $(hiddenId).val('');
+                }
+            }
+        });
+    }
+
+    // Configurar autocompletado para ambos formularios
+    setupAutocomplete('#ingreso-nombre', '#ingreso-producto-id');
+    setupAutocomplete('#egreso-nombre', '#egreso-producto-id');
+
+    // Modificar la validación del formulario de ingreso/egreso
+    function validarNombreMovimiento(input) {
+        const valor = input.value.trim();
+        const hiddenId = input.id === 'ingreso-nombre' ? '#ingreso-producto-id' : '#egreso-producto-id';
+        
+        if (!valor) {
+            mostrarError(input, 'El nombre del producto es obligatorio');
+            return false;
+        }
+        
+        if (!$(hiddenId).val()) {
+            mostrarError(input, 'Debe seleccionar un producto válido de la lista');
+            return false;
+        }
+        
+        limpiarError(input);
+        return true;
+    }
+
+    // Agregar validación a los formularios de movimiento
+    const ingresoNombreInput = document.getElementById('ingreso-nombre');
+    const egresoNombreInput = document.getElementById('egreso-nombre');
+    
+    if (ingresoNombreInput) ingresoNombreInput.addEventListener('blur', function() { validarNombreMovimiento(this); });
+    if (egresoNombreInput) egresoNombreInput.addEventListener('blur', function() { validarNombreMovimiento(this); });
+
+    // Validación completa al enviar formularios de movimiento
+    const formIngreso = document.getElementById('form-ingreso');
+    if (formIngreso) {
+        formIngreso.addEventListener('submit', function(e) {
+            let valido = true;
+            
+            if (!validarNombreMovimiento(this.querySelector('input[name="nombre"]'))) valido = false;
+            if (!validarCantidad(this.cantidad)) valido = false;
+            
+            if (!valido) {
+                e.preventDefault();
+                const boton = this.querySelector('button[type="submit"]');
+                if (boton) {
+                    boton.disabled = false;
+                    boton.innerHTML = '<i class="fas fa-check"></i> Registrar Ingreso';
+                }
+                
+                const primerError = this.querySelector('.error-mensaje[style="display: block;"]');
+                if (primerError) {
+                    primerError.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                }
+            }
+        });
+    }
+
+    const formEgreso = document.getElementById('form-egreso');
+    if (formEgreso) {
+        formEgreso.addEventListener('submit', function(e) {
+            let valido = true;
+            
+            if (!validarNombreMovimiento(this.querySelector('input[name="nombre"]'))) valido = false;
+            if (!validarCantidad(this.cantidad)) valido = false;
+            
+            if (!valido) {
+                e.preventDefault();
+                const boton = this.querySelector('button[type="submit"]');
+                if (boton) {
+                    boton.disabled = false;
+                    boton.innerHTML = '<i class="fas fa-check"></i> Registrar Egreso';
+                }
+                
+                const primerError = this.querySelector('.error-mensaje[style="display: block;"]');
+                if (primerError) {
+                    primerError.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                }
+            }
+        });
+    }
+
     // Validación en tiempo real
     const codigoInput = document.getElementById('codigo');
     const nombreInput = document.getElementById('nombre');

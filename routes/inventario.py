@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, request, redirect, url_for, flash
+from flask import Blueprint, render_template, request, redirect, url_for, flash, jsonify
 from db.conexion import conectar_db
 
 bp_inventario = Blueprint('inventario', __name__)
@@ -123,10 +123,36 @@ def eliminar_producto(producto_id):
     flash("Producto eliminado correctamente.")
     return redirect(url_for('inventario.inventario'))
 
+# Ruta para buscar productos (autocompletado)
+@bp_inventario.route('/buscar_productos')
+def buscar_productos():
+    term = request.args.get('term', '')
+    conn = conectar_db()
+    cur = conn.cursor()
+    cur.execute("""
+        SELECT id, codigo, nombre, categoria, cantidad 
+        FROM productos 
+        WHERE nombre ILIKE %s OR codigo::TEXT LIKE %s
+        LIMIT 10
+    """, (f'%{term}%', f'%{term}%'))
+    
+    productos = []
+    for row in cur.fetchall():
+        productos.append({
+            'id': row[0],
+            'codigo': row[1],
+            'nombre': row[2],
+            'categoria': row[3],
+            'cantidad': row[4]
+        })
+    
+    conn.close()
+    return jsonify(productos)
+
 # Ruta para ingresar la cantidad de un producto
 @bp_inventario.route('/ingreso_producto', methods=['POST'])
 def ingreso_producto():
-    codigo = request.form['codigo'].strip()
+    producto_id = request.form['producto_id'].strip()
     cantidad = request.form['cantidad'].strip()
 
     try:
@@ -140,7 +166,7 @@ def ingreso_producto():
 
     conn = conectar_db()
     cur = conn.cursor()
-    cur.execute("UPDATE productos SET cantidad = cantidad + %s WHERE codigo = %s", (cantidad, codigo))
+    cur.execute("UPDATE productos SET cantidad = cantidad + %s WHERE id = %s", (cantidad, producto_id))
     if cur.rowcount == 0:
         flash("Producto no encontrado para ingreso.")
     else:
@@ -152,7 +178,7 @@ def ingreso_producto():
 # Ruta para egresar la cantidad de un producto
 @bp_inventario.route('/egreso_producto', methods=['POST'])
 def egreso_producto():
-    codigo = request.form['codigo'].strip()
+    producto_id = request.form['producto_id'].strip()
     cantidad = request.form['cantidad'].strip()
 
     try:
@@ -166,7 +192,7 @@ def egreso_producto():
 
     conn = conectar_db()
     cur = conn.cursor()
-    cur.execute("SELECT cantidad FROM productos WHERE codigo = %s", (codigo,))
+    cur.execute("SELECT cantidad FROM productos WHERE id = %s", (producto_id,))
     resultado = cur.fetchone()
 
     if not resultado:
@@ -174,7 +200,7 @@ def egreso_producto():
     elif resultado[0] < cantidad:
         flash(f"No hay suficiente stock (disponible: {resultado[0]}).")
     else:
-        cur.execute("UPDATE productos SET cantidad = cantidad - %s WHERE codigo = %s", (cantidad, codigo))
+        cur.execute("UPDATE productos SET cantidad = cantidad - %s WHERE id = %s", (cantidad, producto_id))
         flash("Egreso realizado correctamente.")
 
     conn.commit()
