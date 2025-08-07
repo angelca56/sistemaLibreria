@@ -198,11 +198,14 @@ tbody tr:hover {
     display: flex;
     gap: 8px;
     justify-content: center;
+    align-items: center; /* Alinea los botones horizontalmente */
 }
 
 .acciones .btn {
     min-width: auto;
     padding: 8px 12px;
+    flex: 1; /* Permite que el botón ocupe el espacio disponible */
+    min-width: 0; /* Permite que el botón se ajuste al contenido */
 }
 
 /* Formulario */
@@ -424,12 +427,18 @@ tbody tr:hover {
     }
     
     .acciones {
-        flex-direction: column;
+        flex-direction: column; /* Alinea los botones verticalmente */
         gap: 5px;
     }
     
     .acciones .btn {
-        width: 100%;
+        width: auto; /* Permite que los botones se ajusten al contenido */
+        padding: 6px, 8px;
+        font-size: 0.8rem;
+    }
+
+    .acciones .btn i {
+        margin-right: 4px;
     }
 }
 
@@ -496,5 +505,15 @@ tbody tr:hover {
     .botones-accion .btn.rojo {
         flex: 1 1 auto; /* Permite flexibilidad en el tamaño */
         white-space: nowrap; /* Evita que el texto se divida */
+    }
+
+    .acciones {
+        flex-wrap: wrap; /* Permite que los botones se ajusten si es necesario */
+        justify-content: center;
+    }
+    
+    .acciones .btn {
+        flex: 1 1 45%; /* Ajusta para que ocupen casi la mitad del espacio */
+        min-width: 100px; /* Establece un ancho mínimo */
     }
 }
