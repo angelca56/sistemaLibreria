@@ -12,11 +12,3 @@ def conectar_db():
         password=os.getenv("DB_PASSWORD"),
         port=os.getenv("DB_PORT")
     )
-
-# Prueba de conexión
-try:
-    conexion = conectar_db()
-    print("✅ Conexión exitosa a la base de datos PostgreSQL")
-    conexion.close()
-except Exception as e:
-    print("❌ Error al conectar:", e)
